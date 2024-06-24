@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    @media only screen and (max-width: 600px) {
+      .menu-category {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+      }
+      article {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+      }
+      body {
+        margin-left: 0;
+      }
+      form {
+        margin-left: 5rem;
+      }
+    }
+
+    body {
+      width: 100%;
+      box-sizing: border-box;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      margin-left: 5rem;
+    }
+    nav {
+      display: flex;
+      width: 100vw;
+      margin-top: 2rem;
+    }
+    .menu-category {
+      display: flex;
+      justify-content: space-between;
+      width: 50%;
+      padding-right: 2rem;
+      padding-bottom: 0.75rem;
+      box-shadow: 0px 5px 5px -5px rgba(0, 0, 0, 0.5);
+
+      list-style-type: none;
+    }
+    li:hover {
+      cursor: pointer;
+    }
+    main {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .main-content {
+      display: flex;
+      width: 65%;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+    }
+
+    article {
+      display: flex;
+      flex-direction: column;
+      width: 30%;
+      align-items: center;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      height: fit-content;
+      margin-bottom: 2rem;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 {
+      width: 100vw;
+    }
+    .amount {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.3rem;
+    }
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .item_pic {
+      width: 15rem;
+      height: 10rem;
+      border-radius: 15px;
+    }
+    .item_info {
+      display: flex;
+      flex-direction: column;
+    }
+    .item_btn {
+      height: 30px;
+      background-color: rgb(234, 103, 41);
+      border: none;
+      border-radius: 13px;
+      font-size: 1rem;
+      width: 100%;
+      color: white;
+    }
+    .item_name,
+    .item_price {
+      font-size: 1.35rem;
+      font-weight: bold;
+      margin: 10px;
+    }
+    .tip_options {
+      display: flex;
+      justify-content: space-between;
+      gap: 5px;
+    }
+    .tip_options > * {
+      border: 1px solid black;
+      border-radius: 5px;
+      padding: 2px 3px;
+      background-color: rgb(240, 227, 227);
+    }
+    .option_custom > input {
+      color: rgb(196, 193, 193);
+    }
+    .order_btn {
+      background-color: rgb(70 156 98);
+      color: white;
+      border-radius: 5px;
+      border: none;
+      width: 100%;
+      margin-top: 2rem;
+      padding: 0.5rem;
+      font-size: 1.25rem;
+    }
+    .popup {
+      background-color: lightgrey;
+      position: absolute;
+      right: 35%;
+      top: 35%;
+      flex-direction: column;
+      align-items: center;
+      width: 35%;
+      justify-content: center;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+      height: 25%;
+      border-radius: 25px;
+      font-size: 1.75rem;
+      z-index: 9999999;
+      display: none;
+    }
+    .popup-close {
+      background-color: none;
+      border-radius: 15px;
+      font-size: 1.5rem;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      border: none;
+    }
+    .popup-text {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      font-size: 1.25rem;
+    }
+    button:hover {
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+      display: none;
+      z-index: 1; /* Ensure the overlay is above other content */
+    }
+  </style>
+
+  <body>
+    <nav>
+      <ul class="menu-category">
+        <li class="appetizers">Appetizers</li>
+        <li class="soups">Soups</li>
+        <li class="salad">Salad</li>
+        <li class="main">Main</li>
+        <li class="dessert">Dessert</li>
+        <li class="drink">Drink</li>
+      </ul>
+    </nav>
+    <main>
+      <h1 class="title">Appetizers</h1>
+      <div class="main-content"></div>
+      <article class="side-content">
+        <div class="overlay"></div>
+        <div class="popup">
+          <button class="popup-close">✕</button>
+          <span class="popup-text"
+            >Your order will be ready in 15 minutes!</span
+          >
+        </div>
+        <h2>Your Order</h2>
+        <form action="submit" class="order-form">
+          <div class="order-list"></div>
+          <div class="amount">
+            <h5>Tip</h5>
+            <span class="tip">$ 00.00</span>
+          </div>
+          <div class="tip_options">
+            <span class="option_lowest">15%</span>
+            <span class="option_middle">18%</span>
+            <span class="option_highest">20%</span>
+            <span class="option_custom">custom</span>
+          </div>
+          <div class="amount">
+            <h5>Total</h5>
+            <span class="total">$ 00.00</span>
+          </div>
+          <div>
+            <label for="delivery">
+              <input
+                checked
+                type="radio"
+                value="delivery"
+                name="deliveryMethod"
+              />Delivery
+            </label>
+            <label for="pickup">
+              <input type="radio" value="pickup" name="deliveryMethod" />Pick up
+            </label>
+          </div>
+          <button type="button" class="order_btn">Place Order</button>
+        </form>
+      </article>
+    </main>
+  </body>
+</html>
+<script>
+  const menuList = [
+    // Appetizers
+    {
+      name: "Avocado Toast",
+      price: "$12.50",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+    {
+      name: "Bruschetta",
+      price: "$10.99",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+    {
+      name: "Mozzarella Sticks",
+      price: "$8.75",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+    {
+      name: "Spinach Artichoke Dip",
+      price: "$14.25",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+    {
+      name: "Chicken Wings",
+      price: "$15.50",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+    {
+      name: "Caprese Skewers",
+      price: "$11.95",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+    {
+      name: "Spring Rolls",
+      price: "$9.99",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+    {
+      name: "Stuffed Mushrooms",
+      price: "$13.45",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Appetizers",
+    },
+
+    // Soups
+    {
+      name: "Tomato Basil Soup",
+      price: "$7.95",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+    {
+      name: "Chicken Noodle Soup",
+      price: "$9.50",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+    {
+      name: "Minestrone Soup",
+      price: "$8.25",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+    {
+      name: "Lentil Soup",
+      price: "$6.99",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+    {
+      name: "Clam Chowder",
+      price: "$10.75",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+    {
+      name: "Vegetarian Chili",
+      price: "$8.50",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+    {
+      name: "Butternut Squash Soup",
+      price: "$9.95",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+    {
+      name: "French Onion Soup",
+      price: "$11.20",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Soups",
+    },
+
+    // Salad
+    {
+      name: "Caesar Salad",
+      price: "$11.99",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Salad",
+    },
+    {
+      name: "Greek Salad",
+      price: "$13.25",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Salad",
+    },
+    {
+      name: "Cobb Salad",
+      price: "$14.50",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Salad",
+    },
+    {
+      name: "Caprese Salad",
+      price: "$12.95",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Salad",
+    },
+    {
+      name: "Spinach Salad",
+      price: "$10.75",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Salad",
+    },
+    {
+      name: "Kale Caesar Salad",
+      price: "$13.45",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Salad",
+    },
+    {
+      name: "Waldorf Salad",
+      price: "$11.20",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Salad",
+    },
+    // Main
+    {
+      name: "Shrimp Pasta",
+      price: "$18.99",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    },
+    {
+      name: "Margherita Pizza",
+      price: "$16.95",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    },
+    {
+      name: "Chicken Alfredo",
+      price: "$19.50",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    },
+    {
+      name: "Beef Stir-Fry",
+      price: "$21.75",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    },
+    {
+      name: "Salmon Teriyaki",
+      price: "$22.99",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    },
+    {
+      name: "Vegetarian Lasagna",
+      price: "$17.50",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    },
+    {
+      name: "BBQ Pulled Pork Sandwich",
+      price: "$14.95",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    },
+    {
+      name: "Grilled Chicken Breast",
+      price: "$15.99",
+      pic: {
+        src: "1.avif",
+        alt: "food",
+      },
+      category: "Main Dishes",
+    }, // Desserts
+    {
+      name: "Chocolate Cake",
+      price: "$8.99",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Desserts",
+    },
+    {
+      name: "Strawberry Cheesecake",
+      price: "$10.75",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Desserts",
+    },
+    {
+      name: "Vanilla Ice Cream",
+      price: "$6.50",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Desserts",
+    },
+    {
+      name: "Fruit Tart",
+      price: "$9.99",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Desserts",
+    },
+
+    // Drinks
+    {
+      name: "Iced Coffee",
+      price: "$4.50",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Drink",
+    },
+    {
+      name: "Fresh Orange Juice",
+      price: "$3.75",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Drink",
+    },
+    {
+      name: "Mango Smoothie",
+      price: "$5.25",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Drink",
+    },
+    {
+      name: "Green Tea",
+      price: "$2.99",
+      pic: { src: "1.avif", alt: "food" },
+      category: "Drink",
+    },
+  ];
+
+  let orderItems = [];
+
+  let orderTotal = 0;
+  let tip = 0;
+
+  const title = document.querySelector(".title");
+  const appetizers = document.querySelector(".appetizers");
+  const salad = document.querySelector(".salad");
+  const soups = document.querySelector(".soups");
+  const main = document.querySelector(".main");
+  const dessert = document.querySelector(".dessert");
+  const drink = document.querySelector(".drink");
+  const content_box = document.querySelector(".main-content");
+  const orderForm = document.querySelector(".order-form");
+  const orderListDiv = orderForm.querySelector(".order-list");
+  const tipAmount = orderForm.querySelector(".tip");
+  const tip_option_box = orderForm.querySelector(".tip_options");
+  const totalAmount = orderForm.querySelector(".total");
+  const placeOrderBtn = orderForm.querySelector(".order_btn");
+
+  function renderCategory(category) {
+    title.innerText = category;
+    content_box.innerHTML = ""; // Clear existing content
+
+    const categoryList = menuList.filter((item) => item.category === category);
+
+    categoryList.forEach((item) => {
+      const card_container = document.createElement("div");
+      card_container.className = "card";
+      const item_pic = document.createElement("img");
+      const item_info = document.createElement("div");
+      const item_name = document.createElement("span");
+      const item_price = document.createElement("span");
+      const item_btn = document.createElement("button");
+
+      item_pic.src = item.pic.src;
+      item_pic.className = "item_pic";
+      item_info.className = "item_info";
+      item_name.innerText = item.name;
+      item_price.innerText = item.price;
+      item_btn.innerText = "Add to Cart";
+      item_btn.className = "item_btn";
+
+      card_container.append(item_pic, item_name, item_price, item_btn);
+      content_box.appendChild(card_container);
+
+      item_btn.addEventListener("click", function () {
+        let clickedItem = {
+          name: item_name.innerText,
+          price: item_price.innerText,
+          qty: 1,
+        };
+
+        displayYourOrder(clickedItem);
+      });
+    });
+  }
+
+  // Event listeners for each category
+  appetizers.addEventListener("click", function () {
+    renderCategory("Appetizers");
+  });
+
+  salad.addEventListener("click", function () {
+    renderCategory("Salad");
+  });
+
+  soups.addEventListener("click", function () {
+    renderCategory("Soups");
+  });
+
+  main.addEventListener("click", function () {
+    renderCategory("Main Dishes");
+  });
+
+  dessert.addEventListener("click", function () {
+    renderCategory("Desserts");
+  });
+
+  drink.addEventListener("click", function () {
+    renderCategory("Drink");
+  });
+  // Default Display "Appetizers"
+  document.addEventListener("DOMContentLoaded", function () {
+    renderCategory("Appetizers");
+  });
+  let displayYourOrder = (newD) => {
+    const list = document.createElement("div");
+    const list_itemData = document.createElement("span");
+
+    const isItemInOrder = orderItems.some((item) => item.name === newD.name);
+
+    if (isItemInOrder) {
+      const isIndex = orderItems.findIndex((item) => item.name === newD.name);
+
+      orderItems[isIndex].qty += 1;
+
+      const className = orderItems[isIndex].name.substring(0, 4);
+
+      const foundBasedOnClassName = orderForm.querySelector(`.${className}`);
+
+      if (foundBasedOnClassName) {
+        const spanElement = foundBasedOnClassName.querySelector("span");
+
+        if (spanElement) {
+          spanElement.innerText = `${orderItems[isIndex].qty}  ✕  ${orderItems[isIndex].name}  `;
+        }
+      }
+      addPrice();
+    } else {
+      orderItems.push(newD);
+      list_itemData.innerText = `${newD.qty}  ✕  ${newD.name}  `;
+      list.appendChild(list_itemData);
+      list.className = newD.name.substring(0, 4);
+      orderListDiv.appendChild(list);
+      totalAmount.innerText = `$ ${orderTotal.toFixed(2)} `;
+      orderForm.insertBefore(orderListDiv, orderForm.firstChild);
+      addPrice();
+    }
+  };
+
+  const addPrice = () => {
+    orderTotal = 0;
+
+    orderItems.forEach((order) => {
+      const processedPriceData = parseFloat(order.price.substring(1));
+      orderTotal += processedPriceData * order.qty;
+
+      const numericTipAmount = parseFloat(tipAmount.innerText.substring(2));
+      if (!isNaN(numericTipAmount) && numericTipAmount > 0) {
+        orderTotal += numericTipAmount;
+      }
+    });
+
+    totalAmount.innerText = `$ ${orderTotal.toFixed(2)}`;
+  };
+
+  const first_option = document.querySelector(".option_lowest");
+  const second_option = document.querySelector(".option_middle");
+  const third_option = document.querySelector(".option_highest");
+  const forth_option = document.querySelector(".option_custom");
+
+  function calculateTip(percentage) {
+    return function () {
+      let result = orderTotal * percentage;
+      tipAmount.innerText = `$ ${result.toFixed(2)}`;
+      totalAmount.innerText = `$ ${orderTotal + result}`;
+    };
+  }
+
+  first_option.addEventListener("click", calculateTip(0.1));
+  second_option.addEventListener("click", calculateTip(0.18));
+  third_option.addEventListener("click", calculateTip(0.2));
+
+  forth_option.addEventListener("click", function () {
+    const inputEl = document.createElement("input");
+    inputEl.type = "text";
+    inputEl.placeholder = "$ 5.00";
+    let inputValue = 0;
+    tipAmount.innerText = `$ ${inputValue}`;
+
+    totalAmount.innerText = `$ ${orderTotal + inputValue}`;
+
+    tip_option_box.replaceChild(inputEl, forth_option);
+
+    inputEl.addEventListener("input", function () {
+      inputValue = parseFloat(inputEl.value) || 0;
+      tipAmount.innerText = `$ ${inputValue.toFixed(2)}`;
+
+      let added = orderTotal + inputValue;
+      totalAmount.innerText = `$ ${added.toFixed(2)}`;
+    });
+  });
+  const overlay = document.querySelector(".overlay");
+  const popup = document.querySelector(".popup");
+  const exitButton = document.querySelector(".popup-close");
+  const popup_msg = document.querySelector(".popup-text");
+
+  placeOrderBtn.addEventListener("click", function () {
+    if (popup.style.display === "none") {
+      popup.style.display = "flex";
+      overlay.style.display = "flex";
+      popup.style.zIndex = "flex";
+      exitButton.style.display = "flex";
+      popup_msg.style.display = "flex";
+      exitButton.style.display = "flex";
+      console.log(popup);
+    } else {
+      popup.style.display = "none";
+      popup_msg.style.display = "none";
+      overlay.style.display = "none";
+      exitButton.style.display = "none";
+    }
+  });
+  exitButton.addEventListener("click", function () {
+    popup.style.display = "none";
+    overlay.style.display = "none";
+  });
+</script>
